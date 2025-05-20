@@ -77,91 +77,60 @@ npm install eslint prettier eslint-config-prettier eslint-plugin-prettier @types
 ```json
 {
   "compilerOptions": {
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "target": "ES2020",
-    "outDir": "dist",
-    "esModuleInterop": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "baseUrl": ".",
-    "paths": { "~/*": ["src/*"] }
+    "module": "CommonJS", // Quy định output module được sử dụng
+    "moduleResolution": "node", //
+    "target": "ES2020", // Target ouput cho code
+    "outDir": "dist", // Đường dẫn output cho thư mục build
+    "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
+    "strict": true /* Enable all strict type-checking options. */,
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */,
+    "baseUrl": ".", // Đường dẫn base cho các import
+    "paths": {
+      "~/*": ["src/*"] // Đường dẫn tương đối cho các import (alias)
+    }
   },
   "ts-node": { "require": ["tsconfig-paths/register"] },
-  "files": ["src/type.d.ts"],
-  "include": ["src/**/*"]
+  "files": ["src/type.d.ts"], // Các file dùng để defined global type cho dự án
+  "include": ["src", "*.ts"] // Đường dẫn include cho các file cần build
 }
 ```
 
-### .eslintrc
+### .eslint.config.mjs
 
 ```json
-{
-  "root": true,
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "prettier"],
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "eslint-config-prettier",
-    "prettier"
-  ],
-  "rules": {
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-unused-vars": "off",
-    "prettier/prettier": [
-      "warn",
-      {
-        "arrowParens": "always",
-        "semi": false,
-        "trailingComma": "none",
-        "tabWidth": 2,
-        "endOfLine": "auto",
-        "useTabs": false,
-        "singleQuote": true,
-        "printWidth": 120,
-        "jsxSingleQuote": true
-      }
-    ]
-  }
-}
-```
+import eslint from "@eslint/js";
+import prettierRecommended from "eslint-plugin-prettier/recommended";
+import tsEslint from "typescript-eslint";
 
-### .eslintignore
+export default tsEslint.config(
+  eslint.configs.recommended,
+  ...tsEslint.configs.recommended,
+  prettierRecommended,
+  {
+    languageOptions: {
+      parserOptions: {
+        project: "./tsconfig.json",
+        tsconfigRootDir: import.meta.dirname,
+        sourceType: "module",
+      },
+    },
+    ignores: ["eslint.config.mjs", "node_modules", "dist"],
+    rules: {
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "no-console": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
+    },
+  },
+);
 
-```
-node_modules/
-dist/
 ```
 
 ### .prettierrc
 
 ```json
-{
-  "arrowParens": "always",
-  "semi": false,
-  "trailingComma": "none",
-  "tabWidth": 2,
-  "endOfLine": "auto",
-  "useTabs": false,
-  "singleQuote": true,
-  "printWidth": 120,
-  "jsxSingleQuote": true
-}
-```
-
-### .prettierignore
-
-```
-node_modules/
-dist/
-```
-
-### .editorconfig
-
-```
-indent_size = 2;
-indent_style = space;
+{ "arrowParens": "always", "tabWidth": 2, "endOfLine": "auto" }
 ```
 
 ### .gitignore
@@ -186,14 +155,12 @@ Add these scripts to your `package.json`:
 
 ```json
 "scripts": {
-  "dev": "npx nodemon",
-  "build": "rimraf ./dist && tsc && tsc-alias",
-  "start": "node dist/index.js",
-  "lint": "eslint .",
-  "lint:fix": "eslint . --fix",
-  "prettier": "prettier --check .",
-  "prettier:fix": "prettier --write ."
-}
+    "dev": "npx nodemon",
+    "build": "rimraf ./dist && tsc && tsc-alias",
+    "start": "node dist/index.js",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint  ."
+  },
 ```
 
 ## Usage

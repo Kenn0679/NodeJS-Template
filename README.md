@@ -57,14 +57,8 @@ npm start
 ## Initial Setup
 
 ```bash
-# Initialize project with package.json
-npm init -y
-
-# Install TypeScript as a development dependency
-npm i typescript -D
-
-# Add TypeScript types for Node.js
-npm i @types/node -D
+# Initialize project
+npm i
 
 # Install development tools (linting, formatting, etc.)
 npm install eslint prettier eslint-config-prettier eslint-plugin-prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser ts-node tsc-alias tsconfig-paths rimraf nodemon -D

@@ -74,7 +74,7 @@ npm install eslint prettier eslint-config-prettier eslint-plugin-prettier @types
 
 ### tsconfig.json
 
-```json
+```javascript
 {
   "compilerOptions": {
     "module": "CommonJS", // Quy định output module được sử dụng
@@ -97,7 +97,7 @@ npm install eslint prettier eslint-config-prettier eslint-plugin-prettier @types
 
 ### .eslint.config.mjs
 
-```json
+```javascript
 import eslint from "@eslint/js";
 import prettierRecommended from "eslint-plugin-prettier/recommended";
 import tsEslint from "typescript-eslint";
